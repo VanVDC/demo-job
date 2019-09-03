@@ -33,7 +33,7 @@ User.prototype.validPassword = function(password) {
       }; 
 
 // create table
-sequelize.sync()
+User.sync()
     .then(() => console.log('User table created'))
     .catch(error => console.log('This error with sync', error));
 
