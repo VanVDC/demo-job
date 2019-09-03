@@ -230,7 +230,7 @@ label {
 }
 
 /* Tablets */
-@media (max-width: 800px) {
+@media (max-width: 768px) {
   .container {
     padding: 1rem 2rem;
   }
@@ -273,7 +273,7 @@ label {
 }
 
 /* Smartphones */
-@media (max-width: 500px) {
+@media (max-width: 360px) {
   .container {
     padding: 1rem;
   }

@@ -3,7 +3,6 @@ var session = require('express-session');
 var morgan = require('morgan');
 var User = require('./models/user');
 
-
 const express = require('express');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
@@ -117,6 +116,8 @@ app.get('/welcome', (req, res) => {
       res.redirect('/login');
   }
 });
+
+
 
 
 // route for logout

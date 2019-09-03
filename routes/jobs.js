@@ -3,17 +3,20 @@ const router = express.Router();
 const Job = require('../models/Job');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+var logContent = require('../logInCheck/loginObj')
 
-// Get Job list
+
+// // Get Job list
 router.get('/', (req, res) => 
   Job.findAll()
-    .then(jobs => res.render('jobs', {
-        jobs
+    .then(jobs => res.render(('jobs'), {
+      jobs
       }))
     .catch(err => console.log(err)));
 
+
 // Display add Job form
-router.get('/add', (req, res) => res.render('add'));
+router.get('/add', (req, res) => res.render('add',logContent));
 
 // Add a Job
 router.post('/add', (req, res) => {
@@ -42,7 +45,8 @@ router.post('/add', (req, res) => {
       technologies, 
       budget, 
       description, 
-      contact_email
+      contact_email,
+      logContent
     });
   } else {
     if(!budget) {
@@ -74,7 +78,7 @@ router.get('/search', (req, res) => {
   term = term.toLowerCase();
 
   Job.findAll({ where: { technologies: { [Op.like]: '%' + term + '%' } } })
-    .then(jobs => res.render('jobs', { jobs }))
+    .then(jobs => res.render('jobs', { jobs, logContent }))
     .catch(err => console.log(err));
 });
 
