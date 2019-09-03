@@ -1,20 +1,9 @@
 var Sequelize = require('sequelize');
 var bcrypt = require('bcrypt');
-	
-// create a sequelize instance with our local postgres database information.
-const sequelize = new Sequelize('demo', 'postgres', '9819141', {
-	host:'localhost',
-	dialect:'postgres',
-	pool:{
-		max: 5,
-		min: 0,
-		acquire: 30000,
-		idle: 10000
-	}, 
-});
+var db =require('../config/database');	
 
-// setup User model and its fields.
-var User = sequelize.define('users', {
+//  User model 
+var User = db.define('users', {
     id: {
         type: Sequelize.INTEGER,
         unique: true,
@@ -43,10 +32,9 @@ User.prototype.validPassword = function(password) {
         return bcrypt.compareSync(password, this.password);
       }; 
 
-// create all the defined tables in the specified database.
+// create table
 sequelize.sync()
-    .then(() => console.log('users table has been successfully created, if one doesn\'t exist'))
-    .catch(error => console.log('This error occured', error));
+    .then(() => console.log('User table created'))
+    .catch(error => console.log('This error with sync', error));
 
-// export User model for use in other files.
 module.exports = User;

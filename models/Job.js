@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../config/database');
 
-const Gig = db.define('gig', {
+const Job = db.define('job', {
   title: {
     type: Sequelize.STRING
   },
@@ -19,6 +19,6 @@ const Gig = db.define('gig', {
   }
 })
 
-Gig.sync();
+Job.sync();
 
-module.exports = Gig;
+module.exports = Job;

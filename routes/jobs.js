@@ -1,24 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const Gig = require('../models/Gig');
+const Job = require('../models/Job');
 const User = require('../models/User');
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-// Get gig list
+// Get Job list
 router.get('/', (req, res) => 
-  Gig.findAll()
-    .then(gigs => res.render('gigs', {
-        gigs
+  Job.findAll()
+    .then(jobs => res.render('jobs', {
+        jobs
       }))
     .catch(err => console.log(err)));
 
-// Display add gig form
+// Display add Job form
 router.get('/add', (req, res) => res.render('add'));
 
-// Add a gig
+// Add a Job
 router.post('/add', (req, res) => {
   let { title, technologies, budget, description, contact_email } = req.body;
   let errors = [];
@@ -58,27 +58,26 @@ router.post('/add', (req, res) => {
     technologies = technologies.toLowerCase().replace(/, /g, ',');
 
     // Insert into table
-    Gig.create({
+    Job.create({
       title,
       technologies,
       description,
       budget,
       contact_email
     })
-      .then(gig => res.redirect('/gigs'))
+      .then(job => res.redirect('/jobs'))
       .catch(err => console.log(err));
   }
 });
 
-// Search for gigs
+// Search for jobs
 router.get('/search', (req, res) => {
   let { term } = req.query;
 
-  // Make lowercase
   term = term.toLowerCase();
 
-  Gig.findAll({ where: { technologies: { [Op.like]: '%' + term + '%' } } })
-    .then(gigs => res.render('gigs', { gigs }))
+  Job.findAll({ where: { technologies: { [Op.like]: '%' + term + '%' } } })
+    .then(jobs => res.render('jobs', { jobs }))
     .catch(err => console.log(err));
 });
 

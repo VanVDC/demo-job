@@ -28,11 +28,11 @@ app.set('view engine', 'handlebars');
 // Body Parser
 app.use(bodyParser.urlencoded({ extended: false }));
 
-//555555
-// initialize express-session to allow us track the logged-in user across sessions.
+//set up authentication
+// initialize express-session.
 app.use(session({
-  key: 'user_sid',
-  secret: 'somerandonstuffs',
+  key: 'user_secretid',
+  secret: 'somestuff',
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -40,47 +40,43 @@ app.use(session({
   }
 }));
 
-// This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
-// This usually happens when you stop your express server after login, your cookie still remains saved in the browser.
+// check if user's cookie is still saved in browser
 app.use((req, res, next) => {
-  if (req.cookies.user_sid && !req.session.user) {
-      res.clearCookie('user_sid');        
+  if (req.cookies.user_secretid && !req.session.user) {
+      res.clearCookie('user_secretid');        
   }
   next();
 });
 
-var hbsContent = {userName: '', loggedin: false, title: "You are not logged in today", body: "Hello World"}; 
-// middleware function to check for logged-in users
+var logContent = {userName: '', loggedin: false, title: "You are not logged in today", body: "Hello World"}; 
+//  function to check for logged-in
 var sessionChecker = (req, res, next) => {
-  if (req.session.user && req.cookies.user_sid) {
+  if (req.session.user && req.cookies.user_secretid) {
   
-      res.redirect('/dashboard');
+      res.redirect('/welcome');
   } else {
       next();
   }    
 };
 
-// route for Home-Page
+// route for index
 app.get('/', sessionChecker, (req, res) => {
-  res.redirect('/login');
+  res.render('index');
 });
 
-// route for user signup
+// route for  signup
 app.route('/signup')
-    //.get(sessionChecker, (req, res) => {
     .get((req, res) => {
-        //res.sendFile(__dirname + '/public/signup.html');
-        res.render('signup', hbsContent);
+        res.render('signup', logContent);
     })
     .post((req, res) => {
         User.create({
             username: req.body.username,
-            //email: req.body.email,
             password: req.body.password
         })
         .then(user => {
             req.session.user = user.dataValues;
-            res.redirect('/dashboard');
+            res.redirect('/welcome');
         })
         .catch(error => {
             res.redirect('/signup');
@@ -88,11 +84,10 @@ app.route('/signup')
     });
 
 
-// route for user Login
+// route for Login
 app.route('/login')
     .get(sessionChecker, (req, res) => {
-        //res.sendFile(__dirname + '/public/login.html');
-        res.render('login', hbsContent);
+        res.render('login', logContent);
     })
     .post((req, res) => {
         var username = req.body.username,
@@ -105,34 +100,32 @@ app.route('/login')
                 res.redirect('/login');
             } else {
                 req.session.user = user.dataValues;
-                res.redirect('/dashboard');
+                res.redirect('/welcome');
             }
         });
     });
 
-    // route for user's dashboard
-app.get('/dashboard', (req, res) => {
-  if (req.session.user && req.cookies.user_sid) {
-  hbsContent.loggedin = true; 
-  hbsContent.userName = req.session.user.username; 
-  //console.log(JSON.stringify(req.session.user)); 
+    // route for user's welcome
+app.get('/welcome', (req, res) => {
+  if (req.session.user && req.cookies.user_secretid) {
+  logContent.loggedin = true; 
+  logContent.userName = req.session.user.username; 
   console.log(req.session.user.username); 
-  hbsContent.title = "You are logged in"; 
-      //res.sendFile(__dirname + '/public/dashboard.html');
-      res.render('index', hbsContent);
+  logContent.title = "You are logged in"; 
+      res.render('index', logContent);
   } else {
       res.redirect('/login');
   }
 });
 
 
-// route for user logout
+// route for logout
 app.get('/logout', (req, res) => {
-  if (req.session.user && req.cookies.user_sid) {
-  hbsContent.loggedin = false; 
-  hbsContent.title = "You are logged out!"; 
-      res.clearCookie('user_sid');
-  console.log(JSON.stringify(hbsContent)); 
+  if (req.session.user && req.cookies.user_secretid) {
+  logContent.loggedin = false; 
+  logContent.title = "You are logged out!"; 
+      res.clearCookie('user_secretid');
+  console.log(JSON.stringify(logContent)); 
       res.redirect('/');
   } else {
       res.redirect('/login');
@@ -151,8 +144,7 @@ app.get('/', (req, res) => res.render('index'));
 app.use('/gigs', require('./routes/gigs'));
 
 //Chat route
-app.use('/chat',require('./routes/chat'))
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, console.log(`Server started on port ${PORT}`));
+app.listen(PORT, console.log(`Server is running in ${PORT}`));
