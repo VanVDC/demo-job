@@ -141,7 +141,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => res.render('index'));
 
 // Gig routes
-app.use('/gigs', require('./routes/gigs'));
+app.use('/gigs', require('./routes/jobs'));
 
 //Chat route
 
