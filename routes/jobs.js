@@ -78,7 +78,7 @@ router.get('/search', (req, res) => {
   term = term.toLowerCase();
 
   Job.findAll({ where: { technologies: { [Op.like]: '%' + term + '%' } } })
-    .then(jobs => res.render('jobs', { jobs, logContent }))
+    .then(jobs => res.render('jobs', { jobs }))
     .catch(err => console.log(err));
 });
 
