@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 var db =require('../config/database');	
 
 //  User model 
