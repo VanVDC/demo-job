@@ -5,6 +5,8 @@
 
 Budgie is a simple budget manager.
 
+## Demo
+
 
 ## Getting Started 
  
